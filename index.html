@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balance Ledger — Real-time Balance Reconciliation</title>
+<meta name="description" content="Balance Ledger by Equilibra Tech — Real-time balance reconciliation for modern fintech platforms and financial services.">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#0f766e;
+  --primary-dark:#0d5f59;
+  --primary-light:#14b8a6;
+  --accent:#0ea5e9;
+  --bg:#f8fafc;
+  --bg-alt:#f1f5f9;
+  --surface:#ffffff;
+  --text:#0f172a;
+  --text-secondary:#475569;
+  --text-muted:#94a3b8;
+  --border:#e2e8f0;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-lg:0 10px 25px rgba(0,0,0,.07),0 4px 10px rgba(0,0,0,.04);
+  --shadow-xl:0 20px 40px rgba(0,0,0,.08);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:'SF Mono','Fira Code','Fira Mono','Roboto Mono',monospace;
+  --max-w:1140px;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--primary);text-decoration:none}
+img{max-width:100%;display:block}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:var(--nav-h)}
+.nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:100%}
+.nav-logo{font-weight:700;font-size:1.15rem;color:var(--text);display:flex;align-items:center;gap:8px}
+.nav-logo-img{height:36px;object-fit:contain}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--text-secondary);font-size:.9rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--primary)}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--text);margin:5px 0;border-radius:2px;transition:all .3s}
+
+/* HERO */
+.hero{padding:100px 24px 80px;text-align:center;background:linear-gradient(170deg,#f0fdfa 0%,var(--bg) 50%,#f0f9ff 100%)}
+.hero-inner{max-width:800px;margin:0 auto}
+.hero-logo{height:100px;object-fit:contain;margin:0 auto 20px;display:block}
+.hero-badge{display:inline-block;padding:6px 16px;border-radius:20px;background:rgba(20,184,166,.1);color:var(--primary);font-size:.8rem;font-weight:600;letter-spacing:.02em;margin-bottom:24px}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.15;color:var(--text);margin-bottom:16px;letter-spacing:-.02em}
+.hero h1 span{color:var(--primary)}
+.hero .subtitle{font-size:clamp(1.05rem,2.5vw,1.25rem);color:var(--text-secondary);max-width:640px;margin:0 auto 16px;line-height:1.6}
+.hero .desc{font-size:.95rem;color:var(--text-muted);max-width:580px;margin:0 auto 32px;line-height:1.7}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:40px}
+.hero-tags span{padding:5px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--border);font-size:.82rem;color:var(--text-secondary);font-weight:500}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 28px;border-radius:8px;font-size:.92rem;font-weight:600;border:none;cursor:pointer;transition:all .25s;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark);box-shadow:0 4px 14px rgba(15,118,110,.3);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-outline:hover{background:var(--primary);color:#fff;transform:translateY(-1px)}
+
+/* SECTIONS */
+section{padding:80px 24px}
+.section-inner{max-width:var(--max-w);margin:0 auto}
+.section-label{display:inline-block;padding:5px 14px;border-radius:20px;background:rgba(20,184,166,.08);color:var(--primary);font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:700;color:var(--text);margin-bottom:12px;letter-spacing:-.015em}
+.section-subtitle{font-size:1rem;color:var(--text-secondary);max-width:600px;line-height:1.7;margin-bottom:40px}
+
+/* WHAT IS */
+#about{background:var(--surface)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.about-text p{color:var(--text-secondary);line-height:1.75;margin-bottom:16px;font-size:.95rem}
+.about-concepts{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}
+.about-concepts span{padding:4px 12px;border-radius:6px;background:var(--bg-alt);font-size:.8rem;color:var(--text-secondary);font-weight:500;border:1px solid var(--border)}
+.capabilities{list-style:none;display:flex;flex-direction:column;gap:16px}
+.capabilities li{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);transition:all .25s}
+.capabilities li:hover{border-color:var(--primary-light);box-shadow:var(--shadow)}
+.cap-icon{width:40px;height:40px;border-radius:10px;background:rgba(20,184,166,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem}
+.cap-content h4{font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.cap-content p{font-size:.84rem;color:var(--text-muted);line-height:1.5}
+
+/* PRICING */
+#pricing{background:var(--bg)}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.pricing-card{background:var(--surface);border-radius:var(--radius);border:1.5px solid var(--border);padding:32px 24px;display:flex;flex-direction:column;transition:all .3s;position:relative}
+.pricing-card:hover{border-color:var(--primary-light);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+.pricing-card.featured{border-color:var(--primary);box-shadow:var(--shadow-lg)}
+.pricing-card.featured::before{content:"Popular";position:absolute;top:-11px;left:50%;transform:translateX(-50%);padding:3px 14px;border-radius:20px;background:var(--primary);color:#fff;font-size:.72rem;font-weight:600;letter-spacing:.03em}
+.pricing-card h3{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.pricing-price{font-size:1.8rem;font-weight:800;color:var(--primary);margin:12px 0 4px}
+.pricing-price span{font-size:.85rem;font-weight:500;color:var(--text-muted)}
+.pricing-base{font-size:.78rem;color:var(--text-muted);margin-bottom:2px}
+.pricing-tx{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:6px;background:rgba(20,184,166,.08);color:var(--primary);font-size:.78rem;font-weight:600}
+.pricing-divider{height:1px;background:var(--border);margin:16px 0}
+.pricing-features{list-style:none;flex:1;margin-bottom:24px}
+.pricing-features li{font-size:.85rem;color:var(--text-secondary);padding:6px 0;display:flex;align-items:center;gap:8px;line-height:1.4}
+.pricing-features li::before{content:"✓";color:var(--primary);font-weight:700;font-size:.8rem;flex-shrink:0}
+.pricing-card .btn{width:100%;text-align:center;padding:11px 20px}
+
+/* INTEGRATION */
+#integration{background:var(--surface)}
+.int-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.steps{list-style:none;counter-reset:step}
+.steps li{counter-increment:step;display:flex;gap:16px;margin-bottom:24px;align-items:flex-start}
+.steps li::before{content:counter(step);width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-content h4{font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.step-content p{font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+.code-block{background:#0f172a;border-radius:var(--radius);padding:0;overflow-x:auto;font-size:.82rem;line-height:1.7;color:#e2e8f0;font-family:var(--mono);position:relative}
+.code-block pre{margin:0;padding:24px;padding-top:40px;font-family:inherit;font-size:inherit;line-height:inherit;color:inherit;white-space:pre;overflow-x:auto;tab-size:2}
+.code-block .code-label{position:absolute;top:10px;right:14px;font-size:.68rem;color:var(--text-muted);font-family:var(--font);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.code-block .method{color:#38bdf8}
+.code-block .url{color:#a5f3fc}
+.code-block .key{color:#7dd3fc}
+.code-block .str{color:#86efac}
+.code-block .num{color:#fbbf24}
+.code-block .comment{color:#64748b;font-style:italic}
+.field-table{width:100%;border-collapse:collapse;margin-top:24px;font-size:.85rem}
+.field-table th{text-align:left;padding:10px 14px;background:var(--bg-alt);color:var(--text-secondary);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.field-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-secondary)}
+.field-table td:first-child{font-weight:600;color:var(--text);font-family:var(--mono);font-size:.82rem}
+.field-table .required{color:var(--primary);font-weight:600;font-size:.75rem}
+.field-table .optional{color:var(--text-muted);font-size:.75rem}
+
+/* CONTACT */
+#contact{background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.contact-info h3{font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:12px}
+.contact-info p{color:var(--text-secondary);line-height:1.7;margin-bottom:24px;font-size:.95rem}
+.contact-email{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--primary);font-weight:600;font-size:.9rem;transition:all .2s}
+.contact-email:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+.form{display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:.82rem;font-weight:600;color:var(--text-secondary)}
+.form-group input,.form-group textarea{padding:11px 14px;border-radius:8px;border:1.5px solid var(--border);font-size:.9rem;font-family:var(--font);color:var(--text);background:var(--surface);transition:border-color .2s,box-shadow .2s;outline:none}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(20,184,166,.1)}
+.form-group textarea{resize:vertical;min-height:110px}
+.form .btn{align-self:flex-start}
+
+/* FOOTER */
+.footer{padding:40px 24px;background:#0f172a;text-align:center}
+.footer p{color:var(--text-muted);font-size:.82rem}
+.footer a{color:var(--primary-light)}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .about-grid,.int-grid,.contact-grid{grid-template-columns:1fr;gap:32px}
+  .pricing-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+}
+@media(max-width:640px){
+  .nav-links{display:none;position:absolute;top:var(--nav-h);left:0;right:0;background:var(--surface);flex-direction:column;padding:16px 24px;gap:16px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-lg)}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:block}
+  .hero{padding:72px 24px 56px}
+  section{padding:56px 24px}
+  .pricing-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo"><img src="logo.png" alt="Balance Ledger" class="nav-logo-img"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#integration">Integration</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <img src="logo.png" alt="Balance Ledger" class="hero-logo">
+    <div class="hero-badge">by Equilibra Tech</div>
+    <p class="subtitle">Real-time balance reconciliation for modern fintech platforms and financial services.</p>
+    <p class="desc">A platform designed to maintain accurate account balances across financial systems. It processes financial transaction events in real time and guarantees ledger consistency across distributed systems.</p>
+    <div class="hero-tags">
+      <span>Fintech Platforms</span>
+      <span>Payment Processors</span>
+      <span>Digital Wallets</span>
+      <span>Financial Services</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#pricing" class="btn btn-primary">View Pricing</a>
+      <a href="#integration" class="btn btn-outline">Start Integration</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS BALANCE LEDGER -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-label">What is Balance Ledger</div>
+        <h2 class="section-title">A reliable financial ledger built for scale</h2>
+        <p>Balance Ledger maintains a reliable, real-time financial ledger that processes balance updates from transaction events using an event-driven architecture. It ensures consistency across distributed systems, making it the backbone of scalable fintech infrastructure.</p>
+        <p>Integration is straightforward — transaction events are ingested via webhooks and processed through asynchronous pipelines. Account balances are updated in real time, with full ledger history available for reconciliation at any point.</p>
+        <p>The system integrates seamlessly with payment gateways, banking APIs, or internal financial services, giving your platform a single source of truth for all account balances.</p>
+        <div class="about-concepts">
+          <span>Webhook Ingestion</span>
+          <span>Async Pipelines</span>
+          <span>Real-time Updates</span>
+          <span>Distributed Reconciliation</span>
+          <span>Ledger History</span>
+          <span>Event-driven</span>
+        </div>
+      </div>
+      <div>
+        <ul class="capabilities">
+          <li>
+            <div class="cap-icon">⚡</div>
+            <div class="cap-content">
+              <h4>Real-time Balance Updates</h4>
+              <p>Account balances are updated the moment a transaction event is processed.</p>
+            </div>
+          </li>
+          <li>
+            <div class="cap-icon">🔄</div>
+            <div class="cap-content">
+              <h4>Event-driven Processing</h4>
+              <p>Built on an event-driven architecture that guarantees consistency and ordering.</p>
+            </div>
+          </li>
+          <li>
+            <div class="cap-icon">📈</div>
+            <div class="cap-content">
+              <h4>Scalable Architecture</h4>
+              <p>Designed for high transaction volumes with horizontal scalability built in.</p>
+            </div>
+          </li>
+          <li>
+            <div class="cap-icon">📋</div>
+            <div class="cap-content">
+              <h4>Ledger History &amp; Reconciliation</h4>
+              <p>Full movement history enables reconciliation and audit trails at any time.</p>
+            </div>
+          </li>
+          <li>
+            <div class="cap-icon">🔗</div>
+            <div class="cap-content">
+              <h4>Easy Integration</h4>
+              <p>Simple webhook API to connect with payment systems, banks, or internal services.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title" style="margin-left:auto;margin-right:auto">Plans that scale with your business</h2>
+      <p class="section-subtitle" style="margin-left:auto;margin-right:auto">From startups processing their first transactions to enterprise platforms handling millions.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Basic -->
+      <div class="pricing-card">
+        <h3>Basic</h3>
+        <div class="pricing-base">Base price</div>
+        <div class="pricing-price">€49 <span>/ month</span></div>
+        <div class="pricing-tx">+ €0.005 / transaction</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Up to 10,000 transactions / month</li>
+          <li>Maximum 5 users</li>
+          <li>Maximum 1,000 accounts</li>
+          <li>Email support</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Get Started</a>
+      </div>
+
+      <!-- Standard -->
+      <div class="pricing-card featured">
+        <h3>Standard</h3>
+        <div class="pricing-base">Base price</div>
+        <div class="pricing-price">€199 <span>/ month</span></div>
+        <div class="pricing-tx">+ €0.003 / transaction</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Up to 100,000 transactions / month</li>
+          <li>Maximum 20 users</li>
+          <li>Maximum 50,000 accounts</li>
+          <li>Webhook support</li>
+          <li>Priority email support</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Get Started</a>
+      </div>
+
+      <!-- Premium -->
+      <div class="pricing-card">
+        <h3>Premium</h3>
+        <div class="pricing-base">Base price</div>
+        <div class="pricing-price">€499 <span>/ month</span></div>
+        <div class="pricing-tx">+ €0.002 / transaction</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Up to 1,000,000 transactions / month</li>
+          <li>Maximum 50 users</li>
+          <li>Maximum 200,000 accounts</li>
+          <li>Webhook support</li>
+          <li>Priority support with SLA</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Get Started</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <div class="pricing-base">Base price</div>
+        <div class="pricing-price">€999 <span>/ month</span></div>
+        <div class="pricing-tx">+ €0.001 / transaction</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>High transaction capacity</li>
+          <li>Maximum 100 users</li>
+          <li>Maximum 500,000 accounts</li>
+          <li>SLA support</li>
+          <li>Dedicated onboarding</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Get Started</a>
+      </div>
+
+      <!-- Custom -->
+      <div class="pricing-card">
+        <h3>Custom</h3>
+        <div class="pricing-price">Custom</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Unlimited transactions</li>
+          <li>Unlimited users</li>
+          <li>Unlimited accounts</li>
+          <li>Dedicated infrastructure</li>
+          <li>Custom integrations</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Contact Us</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATION -->
+<section id="integration">
+  <div class="section-inner">
+    <div class="int-grid">
+      <div>
+        <div class="section-label">Integration</div>
+        <h2 class="section-title">Integrate in minutes, not weeks</h2>
+        <p class="section-subtitle">Balance Ledger uses a webhook-based transaction ingestion API. Send transaction events to a single endpoint and let the platform handle the rest.</p>
+
+        <ol class="steps">
+          <li>
+            <div class="step-content">
+              <h4>Obtain API credentials</h4>
+              <p>Contact us to receive your Company ID and configure your webhook authentication.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <h4>Send transaction events</h4>
+              <p>POST transaction events to the <code>/transactions</code> endpoint with the required headers and payload.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <h4>Asynchronous processing</h4>
+              <p>Balance Ledger validates, deduplicates, and processes each event through a reliable event-driven pipeline.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-content">
+              <h4>Balances updated in real time</h4>
+              <p>Account balances are updated immediately and available through the backoffice API and dashboard.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div>
+        <div class="code-block">
+          <div class="code-label">Example Request</div>
+<pre>
+<span class="method">POST</span> <span class="url">/transactions</span>
+
+<span class="comment">// Required headers</span>
+<span class="key">X-Company-Id</span>:      <span class="str">"a1b2c3d4-e5f6-7890-abcd-ef1234567890"</span>
+<span class="key">Idempotency-Key</span>:  <span class="str">"unique-event-key-001"</span>
+<span class="key">Content-Type</span>:     <span class="str">"application/json"</span>
+
+{
+  <span class="key">"eventType"</span>: <span class="num">1</span>,                          <span class="comment">// TransactionApproved</span>
+  <span class="key">"movement"</span>: {
+    <span class="key">"transactionId"</span>: <span class="str">"TXN-2026-00142"</span>,
+    <span class="key">"amount"</span>: {
+      <span class="key">"totalAmount"</span>:  <span class="num">150.00</span>,
+      <span class="key">"grossAmount"</span>:  <span class="num">155.00</span>,
+      <span class="key">"netAmount"</span>:    <span class="num">147.50</span>,
+      <span class="key">"paymentFee"</span>:   <span class="num">2.50</span>
+    },
+    <span class="key">"account"</span>: {
+      <span class="key">"accountReference"</span>: <span class="str">"ACC-001"</span>,
+      <span class="key">"currency"</span>:         <span class="str">"EUR"</span>
+    },
+    <span class="key">"merchant"</span>: {
+      <span class="key">"merchantId"</span>:   <span class="str">"MRC-500"</span>,
+      <span class="key">"merchantName"</span>: <span class="str">"Acme Payments"</span>,
+      <span class="key">"shop"</span>: {
+        <span class="key">"shopId"</span>:   <span class="str">"SHOP-01"</span>,
+        <span class="key">"shopName"</span>: <span class="str">"Main Store"</span>
+      }
+    },
+    <span class="key">"paymentMethod"</span>: {
+      <span class="key">"paymentMethodId"</span>: <span class="str">"PM-VISA"</span>,
+      <span class="key">"providerName"</span>:    <span class="str">"Stripe"</span>,
+      <span class="key">"type"</span>:            <span class="num">1</span>
+    },
+    <span class="key">"country"</span>:     <span class="str">"ES"</span>,
+    <span class="key">"description"</span>: <span class="str">"Online purchase"</span>
+  }
+}
+</pre>
+        </div>
+
+        <table class="field-table">
+          <thead>
+            <tr><th>Field</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>X-Company-Id</td><td><span class="required">Required</span></td><td>Your company GUID (header)</td></tr>
+            <tr><td>Idempotency-Key</td><td><span class="required">Required</span></td><td>Unique key to prevent duplicate processing (header)</td></tr>
+            <tr><td>eventType</td><td><span class="required">Required</span></td><td>Numeric event type (e.g. 1 = TransactionApproved)</td></tr>
+            <tr><td>movement.transactionId</td><td><span class="required">Required</span></td><td>Unique transaction identifier</td></tr>
+            <tr><td>movement.amount.totalAmount</td><td><span class="required">Required</span></td><td>Total transaction amount</td></tr>
+            <tr><td>movement.account.accountReference</td><td><span class="optional">Optional</span></td><td>Account reference identifier</td></tr>
+            <tr><td>movement.account.currency</td><td><span class="optional">Optional</span></td><td>ISO 4217 currency code</td></tr>
+            <tr><td>movement.merchant</td><td><span class="optional">Optional</span></td><td>Merchant and shop details</td></tr>
+            <tr><td>movement.paymentMethod</td><td><span class="optional">Optional</span></td><td>Payment method information</td></tr>
+            <tr><td>movement.country</td><td><span class="optional">Optional</span></td><td>ISO 3166-1 alpha-2 country code</td></tr>
+            <tr><td>movement.description</td><td><span class="optional">Optional</span></td><td>Free-text transaction description</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's talk</h2>
+        <p>Whether you're exploring Balance Ledger for the first time or ready to integrate, we'd love to hear from you. Reach out and our team will get back to you within 24 hours.</p>
+        <p style="margin-bottom:8px;font-size:.88rem;color:var(--text-muted)">Or contact us directly at</p>
+        <a href="mailto:contact@equilibratech.com" class="contact-email">
+          ✉ contact@equilibratech.com
+        </a>
+      </div>
+      <form class="form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" placeholder="Your company">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>&copy; 2026 <a href="https://equilibratech.com" target="_blank" rel="noopener">Equilibra Tech</a>. All rights reserved.</p>
+</footer>
+
+<script>
+const toggle = document.getElementById('navToggle');
+const links = document.getElementById('navLinks');
+
+toggle.addEventListener('click', function() {
+  links.classList.toggle('open');
+});
+
+links.querySelectorAll('a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    links.classList.remove('open');
+  });
+});
+
+function handleSubmit(e) {
+  e.preventDefault();
+  var btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = 'Message sent ✓';
+  btn.style.background = '#059669';
+  setTimeout(function() {
+    btn.textContent = 'Send Message';
+    btn.style.background = '';
+    e.target.reset();
+  }, 3000);
+}
+</script>
+</body>
+</html>

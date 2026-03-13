@@ -87,7 +87,7 @@ section{padding:80px 24px}
 
 /* PRICING */
 #pricing{background:var(--bg)}
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .pricing-card{background:var(--surface);border-radius:var(--radius);border:1.5px solid var(--border);padding:32px 24px;display:flex;flex-direction:column;transition:all .3s;position:relative}
 .pricing-card:hover{border-color:var(--primary-light);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
 .pricing-card.featured{border-color:var(--primary);box-shadow:var(--shadow-lg)}
@@ -150,7 +150,7 @@ section{padding:80px 24px}
 /* RESPONSIVE */
 @media(max-width:860px){
   .about-grid,.int-grid,.contact-grid{grid-template-columns:1fr;gap:32px}
-  .pricing-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .pricing-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:640px){
   .nav-links{display:none;position:absolute;top:var(--nav-h);left:0;right:0;background:var(--surface);flex-direction:column;padding:16px 24px;gap:16px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-lg)}
@@ -217,6 +217,7 @@ section{padding:80px 24px}
           <span>Distributed Reconciliation</span>
           <span>Ledger History</span>
           <span>Event-driven</span>
+          <span>User & Account Management</span>
         </div>
       </div>
       <div>
@@ -256,6 +257,13 @@ section{padding:80px 24px}
               <p>Simple webhook API to connect with payment systems, banks, or internal services.</p>
             </div>
           </li>
+          <li>
+            <div class="cap-icon">👥</div>
+            <div class="cap-content">
+              <h4>User &amp; Account Management</h4>
+              <p>Admin users can manage team members and assign ledger accounts per user, controlling access and visibility across the organization.</p>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -272,71 +280,81 @@ section{padding:80px 24px}
     </div>
     <div class="pricing-grid">
 
+      <!-- Free Trial -->
+      <div class="pricing-card">
+        <h3>Free Trial</h3>
+        <div class="pricing-price">€0 <span>/ 14 days</span></div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Up to 100 transactions / day</li>
+          <li>Maximum 1 user</li>
+          <li>Maximum 1 ledger account</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Try Free</a>
+      </div>
+
       <!-- Basic -->
       <div class="pricing-card">
         <h3>Basic</h3>
         <div class="pricing-base">Base price</div>
-        <div class="pricing-price">€49 <span>/ month</span></div>
-        <div class="pricing-tx">+ €0.005 / transaction</div>
+        <div class="pricing-price">€300 <span>/ month</span></div>
+        <div class="pricing-tx">+ €0.01 / transaction</div>
         <div class="pricing-divider"></div>
         <ul class="pricing-features">
-          <li>Up to 10,000 transactions / month</li>
-          <li>Maximum 5 users</li>
-          <li>Maximum 1,000 accounts</li>
+          <li>Up to 500 transactions / day</li>
+          <li>Maximum 1 user</li>
+          <li>Maximum 5 ledger accounts</li>
           <li>Email support</li>
         </ul>
         <a href="#contact" class="btn btn-outline">Get Started</a>
       </div>
 
       <!-- Standard -->
-      <div class="pricing-card featured">
+      <div class="pricing-card">
         <h3>Standard</h3>
         <div class="pricing-base">Base price</div>
-        <div class="pricing-price">€199 <span>/ month</span></div>
-        <div class="pricing-tx">+ €0.003 / transaction</div>
+        <div class="pricing-price">€600 <span>/ month</span></div>
+        <div class="pricing-tx">+ €0.005 / transaction</div>
         <div class="pricing-divider"></div>
         <ul class="pricing-features">
-          <li>Up to 100,000 transactions / month</li>
-          <li>Maximum 20 users</li>
-          <li>Maximum 50,000 accounts</li>
-          <li>Webhook support</li>
-          <li>Priority email support</li>
+          <li>Up to 3,000 transactions / day</li>
+          <li>Maximum 3 users</li>
+          <li>Maximum 50 ledger accounts</li>
+          <li>Email support</li>
         </ul>
-        <a href="#contact" class="btn btn-primary">Get Started</a>
+        <a href="#contact" class="btn btn-outline">Get Started</a>
       </div>
 
       <!-- Premium -->
-      <div class="pricing-card">
+      <div class="pricing-card featured">
         <h3>Premium</h3>
         <div class="pricing-base">Base price</div>
-        <div class="pricing-price">€499 <span>/ month</span></div>
+        <div class="pricing-price">€1,000 <span>/ month</span></div>
         <div class="pricing-tx">+ €0.002 / transaction</div>
         <div class="pricing-divider"></div>
         <ul class="pricing-features">
-          <li>Up to 1,000,000 transactions / month</li>
-          <li>Maximum 50 users</li>
-          <li>Maximum 200,000 accounts</li>
-          <li>Webhook support</li>
-          <li>Priority support with SLA</li>
+          <li>Up to 100,000 transactions / day</li>
+          <li>Maximum 10 users</li>
+          <li>Maximum 500 ledger accounts</li>
+          <li>Email support</li>
         </ul>
-        <a href="#contact" class="btn btn-outline">Get Started</a>
+        <a href="#contact" class="btn btn-primary">Get Started</a>
       </div>
 
       <!-- Enterprise -->
       <div class="pricing-card">
         <h3>Enterprise</h3>
         <div class="pricing-base">Base price</div>
-        <div class="pricing-price">€999 <span>/ month</span></div>
+        <div class="pricing-price">€2,000 <span>/ month</span></div>
         <div class="pricing-tx">+ €0.001 / transaction</div>
         <div class="pricing-divider"></div>
         <ul class="pricing-features">
-          <li>High transaction capacity</li>
-          <li>Maximum 100 users</li>
-          <li>Maximum 500,000 accounts</li>
-          <li>SLA support</li>
-          <li>Dedicated onboarding</li>
+          <li>Up to 300,000 transactions / day</li>
+          <li>Maximum 15 users</li>
+          <li>Maximum 2,000 ledger accounts</li>
+          <li>Email support</li>
         </ul>
-        <a href="#contact" class="btn btn-outline">Get Started</a>
+        <a href="#contact" class="btn btn-outline">Contact Us</a>
       </div>
 
       <!-- Custom -->
@@ -347,7 +365,7 @@ section{padding:80px 24px}
         <ul class="pricing-features">
           <li>Unlimited transactions</li>
           <li>Unlimited users</li>
-          <li>Unlimited accounts</li>
+          <li>Unlimited ledger accounts</li>
           <li>Dedicated infrastructure</li>
           <li>Custom integrations</li>
           <li>Dedicated support</li>
@@ -403,7 +421,7 @@ section{padding:80px 24px}
 <span class="method">POST</span> <span class="url">/transactions</span>
 
 <span class="comment">// Required headers</span>
-<span class="key">X-Company-Id</span>:      <span class="str">"a1b2c3d4-e5f6-7890-abcd-ef1234567890"</span>
+<span class="key">X-Company-Id</span>:      <span class="str">"a1b2c3d4-e5f6-7890-abcd-ef1234567890"</span>  <span class="comment">// provided by Balance Ledger</span>
 <span class="key">Idempotency-Key</span>:  <span class="str">"unique-event-key-001"</span>
 <span class="key">Content-Type</span>:     <span class="str">"application/json"</span>
 
@@ -446,7 +464,7 @@ section{padding:80px 24px}
             <tr><th>Field</th><th>Required</th><th>Description</th></tr>
           </thead>
           <tbody>
-            <tr><td>X-Company-Id</td><td><span class="required">Required</span></td><td>Your company GUID (header)</td></tr>
+            <tr><td>X-Company-Id</td><td><span class="required">Required</span></td><td>Your company GUID, provided by Balance Ledger (header)</td></tr>
             <tr><td>Idempotency-Key</td><td><span class="required">Required</span></td><td>Unique key to prevent duplicate processing (header)</td></tr>
             <tr><td>eventType</td><td><span class="required">Required</span></td><td>Numeric event type (e.g. 1 = TransactionApproved)</td></tr>
             <tr><td>movement.transactionId</td><td><span class="required">Required</span></td><td>Unique transaction identifier</td></tr>
@@ -502,7 +520,7 @@ section{padding:80px 24px}
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p>&copy; 2026 <a href="https://equilibratech.com" target="_blank" rel="noopener">Equilibra Tech</a>. All rights reserved.</p>
+  <p>&copy; 2026 Equilibra Tech. All rights reserved.</p>
 </footer>
 
 <script>

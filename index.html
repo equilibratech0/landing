@@ -470,6 +470,36 @@ section{padding:80px 24px}
             </div>
           </li>
         </ol>
+
+        <div style="margin-top:40px">
+          <div class="section-label">Billing</div>
+          <h3 style="font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:12px">Transparent, usage-based billing</h3>
+          <p style="font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:20px">Your monthly invoice is simple and predictable. It consists of two components:</p>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border)">
+              <div class="cap-icon">⚡</div>
+              <div>
+                <h4 style="font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:3px">Per-transaction fee</h4>
+                <p style="font-size:.84rem;color:var(--text-muted);line-height:1.5">A small fee applied to each processed transaction (movement). The rate depends on your plan — from €0.01/tx on Basic down to €0.001/tx on Enterprise. Your total transaction fees are simply: <strong style="color:var(--text)">fee per tx × number of transactions in the month</strong>.</p>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border)">
+              <div class="cap-icon">💰</div>
+              <div>
+                <h4 style="font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:3px">Track your revenue</h4>
+                <p style="font-size:.84rem;color:var(--text-muted);line-height:1.5">Each transaction can include a <code style="background:var(--bg-alt);padding:1px 6px;border-radius:4px;font-size:.82rem">paymentFee</code> field representing your earnings per transaction. If not provided, Balance Ledger calculates it as <code style="background:var(--bg-alt);padding:1px 6px;border-radius:4px;font-size:.82rem">grossAmount − netAmount</code>. Your total revenue is available in the Billing section of the backoffice.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;padding:16px 20px;border-radius:var(--radius);background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.15)">
+            <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.6;margin:0">
+              <strong style="color:var(--primary)">Example:</strong> On the Standard plan (€600/mo base + €0.005/tx), processing 10,000 transactions in a month results in a total invoice of <strong style="color:var(--text)">€600 + €50 = €650</strong>. Your billing dashboard updates automatically every 12 hours with real-time totals.
+            </p>
+          </div>
+        </div>
+
       </div>
 
       <div>
